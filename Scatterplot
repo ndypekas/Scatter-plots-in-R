@@ -1,0 +1,154 @@
+#Relationship analysis
+
+#Check on the data 
+names(diamonds)
+head(diamonds, n = 10)
+str(diamonds)
+summary(diamonds)
+
+#Scatter plot 
+
+#Checking the options
+?geom_point
+
+#Basic scatter plot 
+ggplot(diamonds, aes(x=carat, y=price)) + 
+  geom_point(color=main2_color)
+
+#Handeling the overplotting problem 
+
+#Basic scatter plot - adjusting the size 
+ggplot(diamonds, aes(x=carat, y=price)) +  
+  geom_point(size=0.02, color=main2_color)
+
+#Basic scatter plot - adjusting the opacity
+ggplot(diamonds, aes(x=carat, y=price)) +  
+  geom_point(size=0.02, alpha=0.09, color=main2_color) 
+
+#Basic scatter plot - change y limits
+ggplot(diamonds, aes(x=carat, y=price)) +  
+  geom_point(size=0.2, alpha=0.2, color=main2_color) + 
+  ylim(0, 5000) + 
+  xlim(0, 2) 
+
+#Axis labeling depending on the quantiles 
+ggplot(diamonds, aes(carat, price)) + 
+  geom_point(size=0.02, alpha=0.09, color=main2_color)  + 
+  xlab("")+ 
+  ylab("")+ 
+  scale_x_continuous(breaks = round(as.vector(quantile(diamonds$carat)), digits = 1))+
+  scale_y_continuous(breaks = round(as.vector(quantile(diamonds$price)), digits = 1))
+
+#Basic scatter plot - color as visual encoding redundant  
+ggplot(diamonds, aes(x=carat, y=price, color=price)) + 
+  geom_point(size=0.02) 
+
+#Adding price as another visual encoding using a color code 
+ggplot(diamonds, aes(x=carat, y=price, colour = price)) +
+  geom_point(size=0.04, alpha=0.12)+
+  scale_colour_gradient(low = main1_color, high = main2_color) 
+
+#Another way to handle big data sets is to create a sample  
+diamonds_sample <- diamonds[sample(nrow(diamonds), 500),]
+
+#Basic scatter plot 
+ggplot(diamonds_sample, aes(x=carat, y=price)) + 
+  geom_point(color=main2_color)
+
+#Change the position scale to logarithmic scaling
+ggplot(diamonds, aes(x=carat, y=price)) + 
+  geom_point(size=0.1, alpha=0.09, color=main2_color) +
+  scale_x_log10() 
+
+#Axis labeling depending on the quantiles for logaritmic scaling
+ggplot(diamonds, aes(carat, price)) + 
+  geom_point(size=0.02, alpha=0.09, color=main2_color)  + 
+  xlab("")+ 
+  ylab("")+ 
+  scale_x_log10(breaks = round(as.vector(quantile(diamonds$carat)), digits = 1))+
+  scale_y_continuous(breaks = round(as.vector(quantile(diamonds$price)), digits = 1))
+
+#Adding a trend line 
+ggplot(diamonds, aes(x=carat, y=price)) +
+  geom_point(color=main2_color, size=0.8, alpha=0.09)+
+  stat_smooth(color=decoration_color)
+
+#Small multiples - one variable
+ggplot(diamonds, aes(x=carat, y=price)) +
+  geom_point(color=main2_color, size=0.8, alpha=0.09)+
+  facet_wrap( ~ cut, ncol=2) +
+  stat_smooth(color=decoration_color) 
+
+#Small multiples - one variable with free scale 
+ggplot(diamonds, aes(x=carat, y=price)) +
+  geom_point(color=main2_color, size=0.8, alpha=0.09)+
+  facet_wrap( ~ cut, ncol=2, scales = "free") +
+  stat_smooth(color=decoration_color)
+
+#Small multiples- two variables
+ggplot(diamonds, aes(x=carat, y=price)) +
+  geom_point(color=main2_color, size=0.8, alpha=0.09)+
+  facet_wrap(color ~ cut) +
+  stat_smooth(color=decoration_color)
+
+#Dot-dash scatter plot 
+ggplot(diamonds, aes(carat, price)) + 
+  geom_point(size=0.02, alpha=0.09, color=main2_color) + 
+  geom_rug(size=0.03, alpha=0.08, color=main2_color) + 
+  xlab("") + 
+  ylab("")
+
+#Marginal plot to compare all simple distributions with the scatter plot relationship representation 
+
+?ggMarginal
+
+#Now we set the new defined theme to the default option 
+theme_set(sandra_theme)
+
+#Density
+pp <- ggplot(diamonds, aes(carat, price)) + 
+  geom_point(size=0.02, alpha=0.09, color=main2_color) + 
+  theme(axis.title=element_blank(), axis.text=element_blank())
+
+ggMarginal(pp, type = "density", fill=main2_color, alpha=1, color='transparent')
+
+#Box-plot  
+
+ggMarginal(pp, type = "boxplot", size=30, fill=main2_color)
+
+#Histogram  
+
+ggMarginal(pp, type = "histogram", size=20, fill=main2_color, colour=NA)
+
+#Using the iris data set 
+
+piris <- ggplot(iris, aes(Sepal.Length, Sepal.Width, colour = Species)) +
+  geom_point()
+
+ggMarginal(piris, groupColour = TRUE, groupFill = TRUE)
+
+#Now it's your turn to apply the same flow to
+
+#Either the weather dataset like checking on the relationship of temp and wind
+
+#Check on the data 
+names(lincoln_weather)
+head(lincoln_weather, n=10)
+str(lincoln_weather)
+summary(lincoln_weather)
+
+#Or the gapminder dataset like checking on the relationship of Gdp per cap and life expectancy
+
+#Check on the data 
+names(gapminder)
+head(gapminder, n=10)
+str(gapminder)
+summary(gapminder)
+
+#Or the midwest dataset like checking on the relationship of population and % of proverty 
+
+#Check on the data 
+names(midwest)
+head(midwest, n=10)
+str(midwest)
+summary(midwest)
